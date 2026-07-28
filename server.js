@@ -5,6 +5,7 @@ const multer = require('multer');
 const pdfParse = require('pdf-parse');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +16,9 @@ if (!GROQ_API_KEY) {
   console.warn('[WARNING] GROQ_API_KEY tidak ditemukan di .env — fitur chat tidak akan berfungsi.');
 }
 
+const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
+fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -22,15 +26,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Simpan dokumen aktif di memory (single-user, cocok untuk pemakaian personal/lokal).
 // Untuk multi-user production, ganti dengan penyimpanan per-session/per-user.
 let activeDocument = {
-  filename: null,
-  text: null,
+  filename: null,   // nama asli file (ditampilkan ke user)
+  storedName: null, // nama file di disk (untuk di-serve ke browser)
+  text: null,       // teks hasil ekstraksi (untuk konteks AI)
   pageCount: 0,
 };
 
 const MAX_CONTEXT_CHARS = 60000; // batas aman agar tidak melebihi context window model
 
+// Simpan file PDF apa adanya ke disk, dengan nama tetap "current.pdf"
+// supaya bisa langsung dirender browser lewat <iframe>/<embed>.
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, UPLOAD_DIR),
+    filename: (req, file, cb) => cb(null, 'current.pdf'),
+  }),
   limits: { fileSize: 15 * 1024 * 1024 }, // 15MB
   fileFilter: (req, file, cb) => {
     if (file.mimetype !== 'application/pdf') {
@@ -47,7 +57,8 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
       return res.status(400).json({ error: 'Tidak ada file yang diupload.' });
     }
 
-    const data = await pdfParse(req.file.buffer);
+    const fileBuffer = fs.readFileSync(req.file.path);
+    const data = await pdfParse(fileBuffer);
     const text = (data.text || '').trim();
 
     if (!text) {
@@ -58,15 +69,16 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
     activeDocument = {
       filename: req.file.originalname,
+      storedName: req.file.filename,
       text,
       pageCount: data.numpages || 0,
     };
 
     res.json({
       filename: activeDocument.filename,
+      fileUrl: `/uploads/${activeDocument.storedName}?v=${Date.now()}`,
       pageCount: activeDocument.pageCount,
       charCount: text.length,
-      preview: text.slice(0, 4000),
       truncatedForAI: text.length > MAX_CONTEXT_CHARS,
     });
   } catch (err) {
@@ -82,9 +94,9 @@ app.get('/api/document', (req, res) => {
   }
   res.json({
     filename: activeDocument.filename,
+    fileUrl: `/uploads/${activeDocument.storedName}?v=${Date.now()}`,
     pageCount: activeDocument.pageCount,
     charCount: activeDocument.text.length,
-    preview: activeDocument.text.slice(0, 4000),
   });
 });
 

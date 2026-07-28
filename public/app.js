@@ -4,7 +4,7 @@ const docMeta = document.getElementById('docMeta');
 const docPreview = document.getElementById('docPreview');
 const metaFilename = document.getElementById('metaFilename');
 const metaPages = document.getElementById('metaPages');
-const docPreviewText = document.getElementById('docPreviewText');
+const docPreviewFrame = document.getElementById('docPreviewFrame');
 const docStatus = document.getElementById('docStatus');
 
 const chatLog = document.getElementById('chatLog');
@@ -60,7 +60,7 @@ async function uploadFile(file) {
 
     metaFilename.textContent = data.filename;
     metaPages.textContent = `${data.pageCount} halaman`;
-    docPreviewText.textContent = data.preview + (data.preview.length >= 4000 ? '\n\n… (dipotong untuk pratinjau)' : '');
+    docPreviewFrame.src = data.fileUrl;
 
     docMeta.classList.remove('hidden');
     docPreview.classList.remove('hidden');
@@ -145,7 +145,7 @@ function addMessage(role, text, isError = false, isTyping = false) {
 
     metaFilename.textContent = data.filename;
     metaPages.textContent = `${data.pageCount} halaman`;
-    docPreviewText.textContent = data.preview;
+    docPreviewFrame.src = data.fileUrl;
 
     docMeta.classList.remove('hidden');
     docPreview.classList.remove('hidden');
