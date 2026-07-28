@@ -3,8 +3,8 @@
 :root {
   --ink: #14202e;
   --ink-2: #1d2f42;
-  --paper: #f6f3ec;
-  --paper-2: #ece6d8;
+  --paper: #ffffff;
+  --paper-2: #ffffff;
   --amber: #c9922f;
   --amber-deep: #a5741f;
   --line: #d8d0bd;
@@ -98,7 +98,7 @@ html, body {
 }
 
 .panel {
-  background: var(--paper);
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   overflow: hidden;
