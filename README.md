@@ -1,62 +1,156 @@
-# SOP AI
+# 🤖 DAIS (Damara AI Support)
 
-Website untuk upload dokumen SOP (PDF), menampilkan isinya, lalu bertanya jawab dengan AI (via Groq API) berdasarkan isi dokumen tersebut.
+> AI Assistant untuk membantu membaca dan memahami dokumen SOP (Standard Operating Procedure) dalam format PDF.
 
-## Struktur proyek
+---
 
+# 📖 Tentang Project
+
+**DAIS (Damara AI Support)** merupakan aplikasi berbasis web yang memanfaatkan teknologi Artificial Intelligence (AI) untuk membantu pengguna memperoleh informasi dari dokumen SOP perusahaan secara cepat dan akurat.
+
+Sistem bekerja dengan cara membaca isi dokumen PDF yang diunggah oleh pengguna, kemudian menganalisis isi dokumen tersebut sehingga pengguna dapat mengajukan pertanyaan menggunakan bahasa alami tanpa harus mencari informasi secara manual.
+
+DAIS dirancang untuk meningkatkan efisiensi pencarian informasi, mempercepat pemahaman terhadap prosedur operasional, serta membantu pengguna dalam menemukan jawaban yang relevan berdasarkan isi dokumen SOP.
+
+---
+
+# ✨ Fitur Utama
+
+- 📄 Upload dokumen SOP dalam format PDF.
+- 🤖 AI membaca dan memahami isi dokumen secara otomatis.
+- 💬 Chat interaktif dengan AI menggunakan bahasa alami.
+- 🔍 Menjawab pertanyaan berdasarkan isi dokumen SOP.
+- 📚 Mendukung berbagai jenis dokumen SOP perusahaan.
+- ⚡ Proses pencarian informasi yang cepat dan efisien.
+- 🌐 Antarmuka web yang sederhana dan mudah digunakan.
+
+---
+
+# 🏗 Alur Kerja Sistem
+
+```text
+              Pengguna
+                  │
+                  ▼
+      Upload Dokumen SOP (PDF)
+                  │
+                  ▼
+      AI Membaca Isi Dokumen PDF
+                  │
+                  ▼
+      Pengguna Mengajukan Pertanyaan
+                  │
+                  ▼
+ AI Menganalisis Informasi dari Dokumen
+                  │
+                  ▼
+ Menampilkan Jawaban Berdasarkan SOP
 ```
-sop-ai/
-├── server.js        # server Node.js — baca .env, proxy ke Groq, extract PDF
-├── package.json
-├── .env              # berisi GROQ_API_KEY (JANGAN dibagikan/di-commit ke Git)
-└── public/
-    ├── index.html
-    ├── style.css
-    └── app.js         # HTML/CSS/JS murni untuk tampilan & interaksi
-```
 
-## Kenapa ada server.js kalau maunya cuma HTML/CSS/JS?
+---
 
-File `.env` **tidak bisa dibaca oleh browser**. Kalau API key ditaruh langsung di file `.js` yang dikirim ke browser, siapapun bisa melihatnya lewat "View Page Source" — API key Anda akan bocor dan bisa disalahgunakan orang lain (kena tagihan, dsb).
+# 🚀 Cara Menggunakan
 
-Solusinya: **frontend tetap HTML/CSS/JS murni** (tidak ada framework, tidak ada build step), tapi ditambah **server Node.js minimal** yang:
-1. Membaca `GROQ_API_KEY` dari `.env`
-2. Meneruskan (proxy) pertanyaan user ke Groq API — key tidak pernah dikirim ke browser
-3. Mengekstrak teks dari PDF yang diupload (library `pdf-parse`)
+1. Buka aplikasi DAIS melalui browser.
+2. Upload dokumen SOP dalam format PDF.
+3. Tunggu hingga proses pembacaan dokumen selesai.
+4. Ketik pertanyaan mengenai isi dokumen.
+5. AI akan memberikan jawaban berdasarkan informasi yang terdapat pada dokumen SOP.
 
-Ini adalah cara paling minimal dan aman untuk mencapai apa yang Anda minta.
+---
 
-## Cara menjalankan
+# 💡 Contoh Pertanyaan
 
-1. Pastikan Node.js sudah terinstall (v18 ke atas): https://nodejs.org
-2. Buka terminal di folder `sop-ai`, lalu install dependency:
-   ```
-   npm install
-   ```
-3. Edit file `.env` bila perlu (API key Groq Anda sudah dimasukkan):
-   ```
-   GROQ_API_KEY=isi_dengan_api_key_anda
-   GROQ_MODEL=openai/gpt-oss-120b
-   PORT=3000
-   ```
-4. Jalankan server:
-   ```
-   npm start
-   ```
-5. Buka browser ke `http://localhost:3000`
+### 📄 SOP Operasional
 
-## Cara pakai
+- Apa tujuan dari SOP ini?
+- Siapa saja yang bertanggung jawab dalam proses ini?
+- Apa langkah pertama yang harus dilakukan?
+- Bagaimana alur proses yang dijelaskan pada SOP?
+- Apa tugas masing-masing pihak yang terlibat?
 
-1. Upload file PDF SOP lewat tombol "Upload PDF" atau drag-and-drop.
-2. PDF asli akan ditampilkan apa adanya (dirender langsung oleh browser) di panel kiri, sekaligus teksnya diekstrak di belakang layar untuk konteks AI.
-3. Ketik pertanyaan tentang SOP tersebut di panel kanan — AI akan menjawab berdasarkan isi PDF yang diupload.
+### 📝 SOP Administrasi
 
-Catatan: PDF yang diupload disimpan sementara di `public/uploads/current.pdf` (di-overwrite setiap kali upload baru). Folder ini tidak ikut ter-commit ke Git (lihat `.gitignore`).
+- Dokumen apa saja yang harus dipersiapkan?
+- Formulir apa yang wajib diisi?
+- Berapa lama proses administrasi berlangsung?
+- Apa persyaratan untuk mengajukan proses ini?
+- Siapa yang berwenang memberikan persetujuan?
 
-## Catatan penting
+### 🏦 SOP Perbankan
 
-- **Rotate API key Anda.** Key yang Anda tempel di chat sebelumnya sebaiknya di-regenerate di [console.groq.com](https://console.groq.com/keys), karena key yang pernah dikirim di percakapan sebaiknya dianggap berpotensi bocor.
-- **Model saat ini**: `llama-3.3-70b-versatile`. Groq sudah mengumumkan rencana deprecation untuk model ini, jadi sewaktu-waktu bisa berhenti didukung. Kalau chat mulai error, cek daftar model aktif di [console.groq.com/docs/models](https://console.groq.com/docs/models) dan ganti nilai `GROQ_MODEL` di `.env` (misalnya ke `openai/gpt-oss-120b`).
-- **Single-user/lokal**: dokumen yang diupload disimpan di memory server (satu dokumen aktif). Untuk multi-user/production, perlu ditambahkan penyimpanan per-session atau database.
-- **PDF hasil scan/gambar** tanpa OCR tidak bisa diekstrak teksnya — pastikan PDF berisi teks asli, bukan gambar.
-- **Jangan upload `.env` ke GitHub/tempat publik** — tambahkan `.env` ke `.gitignore` jika Anda pakai Git.
+- Bagaimana prosedur pembukaan rekening?
+- Bagaimana proses pengajuan kredit?
+- Apa langkah-langkah verifikasi data nasabah?
+- Bagaimana prosedur penanganan keluhan nasabah?
+- Apa yang harus dilakukan jika terjadi kesalahan transaksi?
+
+### ⚠️ SOP Penanganan Masalah
+
+- Apa yang harus dilakukan jika sistem mengalami gangguan?
+- Bagaimana prosedur eskalasi apabila terjadi kendala?
+- Kepada siapa masalah harus dilaporkan?
+- Apa tindakan yang harus dilakukan dalam kondisi darurat?
+- Bagaimana prosedur pemulihan setelah masalah selesai?
+
+### 📋 SOP Kepatuhan
+
+- Apa saja ketentuan yang wajib dipatuhi?
+- Risiko apa yang dapat terjadi apabila SOP tidak dijalankan?
+- Apakah terdapat batas waktu dalam proses ini?
+- Bagaimana prosedur audit berdasarkan SOP?
+- Apa konsekuensi jika prosedur tidak diikuti?
+
+### 🔍 Pertanyaan Umum
+
+- Ringkas isi dokumen ini.
+- Jelaskan isi SOP dengan bahasa yang mudah dipahami.
+- Apa poin-poin penting dalam dokumen ini?
+- Buatkan ringkasan setiap bab pada dokumen.
+- Cari informasi mengenai prosedur tertentu dalam dokumen ini.
+- Di halaman berapa prosedur tersebut dijelaskan?
+
+---
+
+# 🎯 Tujuan Project
+
+DAIS dikembangkan untuk membantu pengguna dalam:
+
+- Mempercepat pencarian informasi pada dokumen SOP.
+- Mengurangi waktu yang diperlukan untuk membaca dokumen yang panjang.
+- Mempermudah pemahaman terhadap prosedur operasional perusahaan.
+- Meningkatkan efisiensi dan produktivitas dalam bekerja.
+- Menyediakan asisten AI yang mampu menjawab pertanyaan berdasarkan dokumen yang diunggah.
+
+---
+
+# 🔒 Keamanan
+
+- Dokumen hanya digunakan sebagai sumber informasi untuk menjawab pertanyaan pengguna.
+- Jawaban AI dihasilkan berdasarkan isi dokumen SOP yang diunggah.
+- Sistem dirancang untuk membantu pencarian informasi tanpa mengubah isi dokumen asli.
+
+---
+
+# 📌 Pengembangan Selanjutnya
+
+- Mendukung beberapa dokumen SOP dalam satu sesi.
+- Riwayat percakapan dengan AI.
+- Pencarian informasi yang lebih cerdas menggunakan AI.
+- Dukungan dokumen hasil scan (OCR).
+- Hak akses pengguna berdasarkan divisi.
+- Integrasi dengan sistem internal perusahaan.
+
+---
+
+# 👨‍💻 Developer
+
+**DAIS (Damara AI Support)**
+
+Sistem AI berbasis web yang dirancang untuk membantu pengguna membaca, memahami, dan mencari informasi dari dokumen SOP perusahaan secara cepat, mudah, dan efisien.
+
+---
+
+# 📄 License
+
+Project ini dikembangkan untuk kebutuhan internal **Bank Damara**.
