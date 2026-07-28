@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SOP AI — Asisten Prosedur Operasi</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__mark">
+    <span class="topbar__stamp">SOP·AI</span>
+    <span class="topbar__sub">Document Intelligence</span>
+  </div>
+  <div class="topbar__status" id="docStatus">
+    <span class="dot dot--off"></span>
+    <span>Belum ada dokumen dimuat</span>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- LEFT: Document panel -->
+  <section class="panel panel--doc">
+    <div class="panel__head">
+      <h2>Dokumen SOP</h2>
+      <label class="btn btn--upload" for="fileInput">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0-12 4 4m-4-4-4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        Upload PDF
+      </label>
+      <input type="file" id="fileInput" accept="application/pdf" hidden />
+    </div>
+
+    <div id="dropZone" class="dropzone">
+      <div class="dropzone__inner">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v12m0-12 4 4m-4-4-4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <p><strong>Seret file PDF ke sini</strong><br>atau klik tombol Upload PDF</p>
+      </div>
+    </div>
+
+    <div id="docMeta" class="doc-meta hidden">
+      <div class="doc-meta__row">
+        <span class="label">File</span>
+        <span id="metaFilename" class="value"></span>
+      </div>
+      <div class="doc-meta__row">
+        <span class="label">Halaman</span>
+        <span id="metaPages" class="value"></span>
+      </div>
+      <div class="doc-meta__row">
+        <span class="label">Status</span>
+        <span class="value stamp-ok">TERINDEKS</span>
+      </div>
+    </div>
+
+    <div id="docPreview" class="doc-preview hidden">
+      <h3>Isi SOP</h3>
+      <pre id="docPreviewText"></pre>
+    </div>
+  </section>
+
+  <!-- RIGHT: Chat panel -->
+  <section class="panel panel--chat">
+    <div class="panel__head">
+      <h2>Tanya SOP</h2>
+    </div>
+
+    <div id="chatLog" class="chat-log">
+      <div class="msg msg--ai">
+        <div class="msg__bubble">
+          Halo. Upload dokumen SOP (PDF) di panel kiri, lalu tanyakan apa saja tentang isi prosedurnya di sini.
+        </div>
+      </div>
+    </div>
+
+    <form id="chatForm" class="chat-input">
+      <input
+        type="text"
+        id="chatText"
+        placeholder="Contoh: Apa langkah pertama dalam prosedur ini?"
+        autocomplete="off"
+        disabled
+      />
+      <button type="submit" id="sendBtn" disabled>Kirim</button>
+    </form>
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
