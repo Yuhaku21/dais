@@ -10,7 +10,7 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const GROQ_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-120b';
+const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
 
 if (!GROQ_API_KEY) {
   console.warn('[WARNING] GROQ_API_KEY tidak ditemukan di .env — fitur chat tidak akan berfungsi.');
@@ -32,7 +32,7 @@ let activeDocument = {
   pageCount: 0,
 };
 
-const MAX_CONTEXT_CHARS = 60000; // batas aman agar tidak melebihi context window model
+const MAX_CONTEXT_CHARS = 8000; // batas aman agar tidak melebihi context window model
 
 // Simpan file PDF apa adanya ke disk, dengan nama tetap "current.pdf"
 // supaya bisa langsung dirender browser lewat <iframe>/<embed>.
